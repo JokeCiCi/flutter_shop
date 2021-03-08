@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_shop/page/home_page.dart';
 import 'package:flutter_shop/page/cate_page.dart';
 import 'package:flutter_shop/page/cart_page.dart';
 import 'package:flutter_shop/page/user_page.dart';
 import 'package:flutter_shop/provider/bottom_navi_provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IndexPage extends StatefulWidget {
   IndexPage({Key key}) : super(key: key);
@@ -29,6 +31,12 @@ class _IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(
+        BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width,
+            maxHeight: MediaQuery.of(context).size.height),
+        designSize: Size(750, 1334),
+        allowFontScaling: false);
     return Scaffold(
         body: Consumer<BottomNaviProvider>(
             builder: (_, obj, __) => IndexedStack(
