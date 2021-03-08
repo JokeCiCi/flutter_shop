@@ -6,7 +6,6 @@ import 'package:flutter_shop/page/cate_page.dart';
 import 'package:flutter_shop/page/cart_page.dart';
 import 'package:flutter_shop/page/user_page.dart';
 import 'package:flutter_shop/provider/bottom_navi_provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IndexPage extends StatefulWidget {
   IndexPage({Key key}) : super(key: key);

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shop/model/home_page_model.dart';
 import 'package:flutter_shop/provider/home_page_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,14 +19,13 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
           appBar: AppBar(title: Text('首页')),
           body: Consumer<HomePageProvider>(builder: (_, provider, __) {
-            var model = provider.homePageModel;
             if (provider.isLoading) {
               return buildLoading();
             }
             if (provider.isError) {
               return buildError(provider);
             }
-            return buildContent(model);
+            return buildContent(provider);
           })),
     );
   }
@@ -49,37 +47,39 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildContent(HomePageModel model) {
+  Widget buildContent(HomePageProvider provider) {
+    var model = provider.homePageModel;
     return ListView(
       children: [
-        buildSwiper(model),
-        buildLogo(model),
-        buildMsHeader(model),
-        buildMsContent(model),
+        buildSwiper(provider),
+        buildLogo(provider),
+        buildMsHeader(provider),
+        buildMsContent(provider),
         buildAd(model.pageRow.ad1),
         buildAd(model.pageRow.ad2)
       ],
     );
   }
 
-  Widget buildSwiper(HomePageModel model) {
+  Widget buildSwiper(HomePageProvider provider) {
     return Container(
       // width: ScreenUtil().setWidth(720),
       // height: ScreenUtil().setHeight(350),
       height: ScreenUtil().setHeight(370),
       child: Swiper(
-        itemCount: model.swipers.length,
+        itemCount: provider.homePageModel.swipers.length,
         pagination: SwiperPagination(),
         autoplay: true,
         itemBuilder: (context, index) {
-          return Image.asset("assets${model.swipers[index].image}");
+          return Image.asset(
+              "assets${provider.homePageModel.swipers[index].image}");
         },
       ),
     );
   }
 
-  Widget buildLogo(HomePageModel model) {
-    var children = model.logos
+  Widget buildLogo(HomePageProvider provider) {
+    var children = provider.homePageModel.logos
         .map((e) =>
             Column(children: [Image.asset('assets${e.image}'), Text(e.title)]))
         .toList();
@@ -94,7 +94,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildMsHeader(HomePageModel model) {
+  Widget buildMsHeader(HomePageProvider provider) {
     return Container(
       margin: EdgeInsets.only(top: 20),
       height: ScreenUtil().setHeight(50),
@@ -109,19 +109,19 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget buildMsContent(HomePageModel model) {
+  Widget buildMsContent(HomePageProvider provider) {
     return Container(
       height: ScreenUtil().setHeight(250),
       alignment: Alignment.center,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: model.quicks.length,
+          itemCount: provider.homePageModel.quicks.length,
           itemBuilder: (context, index) {
             return Column(children: [
-              Image.asset('assets${model.quicks[index].image}',
+              Image.asset('assets${provider.homePageModel.quicks[index].image}',
                   width: ScreenUtil().setHeight(200),
                   height: ScreenUtil().setHeight(200)),
-              Text('${model.quicks[index].price}',
+              Text('${provider.homePageModel.quicks[index].price}',
                   style: TextStyle(
                       fontSize: ScreenUtil().setSp(30), color: Colors.red)),
             ]);

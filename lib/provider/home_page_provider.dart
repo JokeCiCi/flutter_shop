@@ -5,7 +5,7 @@ import 'package:flutter_shop/config/api.dart';
 
 class HomePageProvider with ChangeNotifier {
   bool isLoading = false; // 是否加载中
-  HomePageModel homePageModel; // 数据
+  HomePageModel homePageModel; // 首页数据
   bool isError = false; // 是否错误
   String errMsg = ''; // 错误信息
   void loadHomePageModelData() {
