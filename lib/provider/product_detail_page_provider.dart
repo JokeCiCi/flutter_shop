@@ -1,22 +1,27 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_shop/model/product_detail_page_model.dart';
 import 'package:flutter_shop/net/http_client.dart';
 import 'package:flutter_shop/config/api.dart';
-import 'package:flutter_shop/model/product_list_page_model.dart';
 
-class ProductListPageProvider with ChangeNotifier {
+class ProductDetailPageProvider with ChangeNotifier {
   bool isLoading = false;
-  List<ProductModel> productModelList = [];
+  ProductDetailModel productDetailModel;
   bool isError = false;
   String errMsg = '';
-  void loadProductModelListData() {
+
+  void loadProductDetailModel(String id) {
     isLoading = true;
-    HttpClient().requestData(Api.PROD_LIST).then((resp) {
+    HttpClient().requestData(Api.PROD_DETAIL).then((resp) {
       print('dio resp: ${resp.data}');
       isLoading = false;
       if (resp.code == 200 && resp.data is List) {
         var dataList = (resp.data as List).cast();
-        productModelList =
-            dataList.map((e) => ProductModel.fromJson(e)).toList();
+        dataList.forEach((ele) {
+          var tempModel = ProductDetailModel.fromJson(ele);
+          if (tempModel.partData.id == id) {
+            productDetailModel = tempModel;
+          }
+        });
       }
       notifyListeners();
     }).catchError((error) {

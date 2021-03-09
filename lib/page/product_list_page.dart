@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_shop/provider/productlist_page_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/provider/product_list_page_provider.dart';
 
 class ProductListPage extends StatelessWidget {
   final String title;
@@ -66,7 +66,7 @@ class ProductListPage extends StatelessWidget {
             itemBuilder: (context, index) {
               return InkWell(
                   onTap: () {
-                    print(index);
+                    print(provider.productModelList[index].toJson());
                   },
                   child: Container(
                       padding: EdgeInsets.only(left: 10, right: 10),
