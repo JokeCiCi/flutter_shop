@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_shop/model/product_page_model.dart';
+import 'package:flutter_shop/model/productlist_page_model.dart';
 import 'package:flutter_shop/net/http_client.dart';
 import 'package:flutter_shop/config/api.dart';
 
-class ProductPageProvider with ChangeNotifier {
+class ProductListPageProvider with ChangeNotifier {
   bool isLoading = false;
   List<ProductModel> productModelList = [];
   bool isError = false;
@@ -13,8 +13,10 @@ class ProductPageProvider with ChangeNotifier {
     HttpClient().requestData(Api.PROD_LIST).then((resp) {
       print('dio resp: ${resp.data}');
       isLoading = false;
-      if (resp.code == 200) {
-        print(resp.data.toString());
+      if (resp.code == 200 && resp.data is List) {
+        var dataList = (resp.data as List).cast();
+        productModelList =
+            dataList.map((e) => ProductModel.fromJson(e)).toList();
       }
       notifyListeners();
     }).catchError((error) {

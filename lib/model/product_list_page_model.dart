@@ -1,11 +1,11 @@
-class ProductModelResp {
+class ProductListModelResp {
   int code;
   String msg;
   List<ProductModel> data;
 
-  ProductModelResp({this.code, this.msg, this.data});
+  ProductListModelResp({this.code, this.msg, this.data});
 
-  ProductModelResp.fromJson(Map<String, dynamic> json) {
+  ProductListModelResp.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     msg = json['msg'];
     if (json['data'] != null) {

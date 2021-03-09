@@ -18,10 +18,12 @@ class HttpClient {
           ? await client.get(path, queryParameters: queryParameters)
           : await client.post(path, data: data);
       return HttpResponse(
+          // 返回http response body数据
           code: resp.data['code'],
           msg: resp.data['msg'],
           data: resp.data['data']);
     } on DioError catch (e) {
+      // http错误处理
       String message = e.message;
       print(message);
       if (e.type == DioErrorType.CONNECT_TIMEOUT) {
