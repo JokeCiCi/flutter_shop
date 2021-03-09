@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/provider/product_list_page_provider.dart';
+import 'package:flutter_shop/routes/routes.dart';
 
 class ProductListPage extends StatelessWidget {
   final String title;
@@ -22,9 +23,7 @@ class ProductListPage extends StatelessWidget {
               appBar: AppBar(
                   leading: IconButton(
                       icon: Icon(Icons.arrow_left),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      }),
+                      onPressed: () => Routes.router.pop(context)),
                   title: Text('$title')),
               body: buildContent(provider));
         },
@@ -67,6 +66,9 @@ class ProductListPage extends StatelessWidget {
               return InkWell(
                   onTap: () {
                     print(provider.productModelList[index].toJson());
+                    print(provider.productModelList[index].id);
+                    Routes.router.navigateTo(context,
+                        '/productDetail/${provider.productModelList[index].id}');
                   },
                   child: Container(
                       padding: EdgeInsets.only(left: 10, right: 10),
