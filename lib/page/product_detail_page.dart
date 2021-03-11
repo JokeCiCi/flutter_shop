@@ -131,7 +131,7 @@ class ProductDetailPage extends StatelessWidget {
             child: Row(children: [
               Text('已选', style: TextStyle(color: Colors.black54)),
               SizedBox(width: 5),
-              Text('1件'),
+              Text('${provider.productDetailModel.partData.count}件'),
               Spacer(),
               Icon(Icons.more_horiz)
             ])));
@@ -323,7 +323,12 @@ class CountDialog extends StatelessWidget {
                       Text('数量'),
                       Spacer(),
                       InkWell(
-                          onTap: () => print('数量-'),
+                          onTap: () {
+                            var tmpCount =
+                                provider.productDetailModel.partData.count;
+                            tmpCount--;
+                            provider.changeProductCount(tmpCount);
+                          },
                           child: Container(
                               width: ScreenUtil().setWidth(35),
                               height: ScreenUtil().setWidth(35),
@@ -342,7 +347,12 @@ class CountDialog extends StatelessWidget {
                               style:
                                   TextStyle(fontSize: ScreenUtil().setSp(25)))),
                       InkWell(
-                          onTap: () => print('数量+'),
+                          onTap: () {
+                            var tmpCount =
+                                provider.productDetailModel.partData.count;
+                            tmpCount++;
+                            provider.changeProductCount(tmpCount);
+                          },
                           child: Container(
                               width: ScreenUtil().setWidth(35),
                               height: ScreenUtil().setWidth(35),

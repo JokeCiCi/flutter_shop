@@ -45,4 +45,11 @@ class ProductDetailPageProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void changeProductCount(int count) {
+    if (count > 0 && productDetailModel.partData.count != count) {
+      productDetailModel.partData.count = count;
+      notifyListeners();
+    }
+  }
 }
