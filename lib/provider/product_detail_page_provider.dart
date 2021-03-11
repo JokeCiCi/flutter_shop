@@ -32,4 +32,17 @@ class ProductDetailPageProvider with ChangeNotifier {
       notifyListeners();
     });
   }
+
+  void changeBaiTiaoSelected(int index) {
+    if (productDetailModel.baitiao[index].select == false) {
+      for (var i = 0; i < productDetailModel.baitiao.length; i++) {
+        if (i == index) {
+          productDetailModel.baitiao[i].select = true;
+        } else {
+          productDetailModel.baitiao[i].select = false;
+        }
+      }
+      notifyListeners();
+    }
+  }
 }

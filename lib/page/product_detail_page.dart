@@ -109,7 +109,7 @@ class ProductDetailPage extends StatelessWidget {
             child: Row(children: [
               Text('支付', style: TextStyle(color: Colors.black54)),
               SizedBox(width: 5),
-              Text('不分期'),
+              Text('${_getBaiTiaoSelectedDesc(provider)}'),
               Spacer(),
               Icon(Icons.more_horiz)
             ])));
@@ -163,6 +163,16 @@ class ProductDetailPage extends StatelessWidget {
                           child: Text('加入购物车'))))
             ])));
   }
+
+  String _getBaiTiaoSelectedDesc(ProductDetailPageProvider provider) {
+    var baiTiaoSelectedDesc = provider.productDetailModel.baitiao[0].desc;
+    provider.productDetailModel.baitiao.forEach((element) {
+      if (element.select) {
+        baiTiaoSelectedDesc = element.desc;
+      }
+    });
+    return baiTiaoSelectedDesc;
+  }
 }
 
 class BaiTiaoDialog extends StatelessWidget {
@@ -171,7 +181,6 @@ class BaiTiaoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(context.toString());
     return ChangeNotifierProvider<ProductDetailPageProvider>.value(
         value: provider,
         child: Consumer<ProductDetailPageProvider>(
@@ -205,7 +214,8 @@ class BaiTiaoDialog extends StatelessWidget {
                             margin: EdgeInsets.all(10),
                             child: Row(children: [
                               InkWell(
-                                  onTap: () => print('选择白条'),
+                                  onTap: () =>
+                                      provider.changeBaiTiaoSelected(index),
                                   child: Image.asset(
                                       provider.productDetailModel.baitiao[index]
                                               .select
@@ -235,7 +245,7 @@ class BaiTiaoDialog extends StatelessWidget {
                   right: 0,
                   bottom: 0,
                   child: InkWell(
-                      onTap: () => print('白条支付'),
+                      onTap: () => Routes.router.pop(context),
                       child: Container(
                           width: ScreenUtil().setWidth(750),
                           height: ScreenUtil().setHeight(50),
