@@ -41,7 +41,7 @@ class ProductDetailPage extends StatelessWidget {
         buildTitle(provider),
         buildPrice(provider),
         buildPay(provider, context),
-        buildCount(provider),
+        buildCount(provider, context),
       ]),
       buildBottomButton(provider),
     ]);
@@ -115,9 +115,12 @@ class ProductDetailPage extends StatelessWidget {
             ])));
   }
 
-  Widget buildCount(ProductDetailPageProvider provider) {
+  Widget buildCount(ProductDetailPageProvider provider, BuildContext context) {
     return InkWell(
-        onTap: () => print('件数'),
+        onTap: () => showModalBottomSheet(
+            backgroundColor: Colors.transparent, // 1层背景透明
+            context: context,
+            builder: (context) => CountDialog(provider: provider)),
         child: Container(
             height: ScreenUtil().setHeight(60),
             padding: EdgeInsets.all(10),
@@ -252,6 +255,116 @@ class BaiTiaoDialog extends StatelessWidget {
                           alignment: Alignment.center,
                           decoration: BoxDecoration(color: Colors.red),
                           child: Text('白条支付',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)))))
+            ]);
+          },
+        ));
+  }
+}
+
+class CountDialog extends StatelessWidget {
+  final ProductDetailPageProvider provider;
+  const CountDialog({Key key, this.provider}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<ProductDetailPageProvider>.value(
+        value: provider,
+        child: Consumer<ProductDetailPageProvider>(
+          builder: (_, provider, __) {
+            return Stack(children: [
+              Container(
+                  // 2层背景白
+                  width: double.infinity,
+                  height: double.infinity,
+                  margin: EdgeInsets.only(top: 30),
+                  color: Colors.white),
+              Container(
+                  // 第一行
+                  width: ScreenUtil().setWidth(750),
+                  height: ScreenUtil().setHeight(150),
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Row(
+                    children: [
+                      Image.asset(
+                          'assets${provider.productDetailModel.partData.loopImgUrl[0]}',
+                          width: ScreenUtil().setWidth(120),
+                          fit: BoxFit.fill),
+                      Container(
+                        margin: EdgeInsets.only(left: 10, top: 35),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  '￥${provider.productDetailModel.partData.price}',
+                                  style: TextStyle(color: Colors.red)),
+                              SizedBox(height: 10),
+                              Text(
+                                  '已选${provider.productDetailModel.partData.count}件')
+                            ]),
+                      ),
+                      Spacer(),
+                      Container(
+                          margin: EdgeInsets.only(right: 10, top: 20),
+                          child: IconButton(
+                              icon: Icon(Icons.close),
+                              onPressed: () => Routes.router.pop(context)))
+                    ],
+                  )),
+              Container(
+                  width: ScreenUtil().setWidth(750),
+                  height: ScreenUtil().setHeight(80),
+                  margin: EdgeInsets.only(top: 150),
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Row(
+                    children: [
+                      Text('数量'),
+                      Spacer(),
+                      InkWell(
+                          onTap: () => print('数量-'),
+                          child: Container(
+                              width: ScreenUtil().setWidth(35),
+                              height: ScreenUtil().setWidth(35),
+                              color: Colors.black12,
+                              alignment: Alignment.center,
+                              child: Text('-',
+                                  style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(25))))),
+                      Container(
+                          width: ScreenUtil().setWidth(35),
+                          height: ScreenUtil().setWidth(35),
+                          color: Colors.white,
+                          alignment: Alignment.center,
+                          child: Text(
+                              '${provider.productDetailModel.partData.count}',
+                              style:
+                                  TextStyle(fontSize: ScreenUtil().setSp(25)))),
+                      InkWell(
+                          onTap: () => print('数量+'),
+                          child: Container(
+                              width: ScreenUtil().setWidth(35),
+                              height: ScreenUtil().setWidth(35),
+                              color: Colors.black12,
+                              alignment: Alignment.center,
+                              child: Text('+',
+                                  style: TextStyle(
+                                      fontSize: ScreenUtil().setSp(25))))),
+                    ],
+                  )),
+              Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: InkWell(
+                      onTap: () => Routes.router.pop(context),
+                      child: Container(
+                          width: ScreenUtil().setWidth(750),
+                          height: ScreenUtil().setHeight(50),
+                          color: Colors.red,
+                          alignment: Alignment.center,
+                          child: Text('加入购物车',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold)))))
