@@ -32,16 +32,19 @@ class CartPageProvider with ChangeNotifier {
         tempList.add(json.encode(tempPart));
         productDataList.add(tempPart);
       });
-
       if (isCached == false) {
         // 缓存不存在传参数据
         tempList.add(json.encode(product));
         productDataList.add(product);
       }
-
       prefs.setStringList('cartInfo', tempList); // 写入缓存
       notifyListeners();
     }
-    productDataList.forEach((ele) => print('本地:${ele.count}---->${ele.title}'));
+  }
+
+  int getAllProductCount() {
+    int count = 0;
+    productDataList.forEach((element) => count += element.count);
+    return count;
   }
 }

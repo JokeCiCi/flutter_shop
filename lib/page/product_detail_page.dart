@@ -157,7 +157,27 @@ class ProductDetailPage extends StatelessWidget {
                           height: ScreenUtil().setHeight(80),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [Icon(Icons.shopping_cart), Text('购物车')],
+                            children: [
+                              Container(
+                                  width: ScreenUtil().setWidth(40),
+                                  height: ScreenUtil().setHeight(40),
+                                  child: Stack(children: [
+                                    Icon(Icons.shopping_cart),
+                                    Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(15)),
+                                            child: Text(
+                                                '${Provider.of<CartPageProvider>(context, listen: true).getAllProductCount()}',
+                                                style: TextStyle(
+                                                    color: Colors.white))))
+                                  ])),
+                              Text('购物车')
+                            ],
                           )))),
               Expanded(
                   child: InkWell(
@@ -373,9 +393,11 @@ class CountDialog extends StatelessWidget {
                   right: 0,
                   bottom: 0,
                   child: InkWell(
-                      onTap: () =>
-                          Provider.of<CartPageProvider>(context, listen: false)
-                              .addToCart(provider.productDetailModel.partData),
+                      onTap: () {
+                        Provider.of<CartPageProvider>(context, listen: false)
+                            .addToCart(provider.productDetailModel.partData);
+                        Routes.router.pop(context);
+                      },
                       child: Container(
                           width: ScreenUtil().setWidth(750),
                           height: ScreenUtil().setHeight(50),
