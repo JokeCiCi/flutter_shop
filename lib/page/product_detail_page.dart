@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/provider/cart_page_provider.dart';
+import 'package:flutter_shop/provider/cate_page_provider.dart';
 import 'package:flutter_shop/provider/product_detail_page_provider.dart';
 import 'package:flutter_shop/routes/routes.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -43,7 +45,7 @@ class ProductDetailPage extends StatelessWidget {
         buildPay(provider, context),
         buildCount(provider, context),
       ]),
-      buildBottomButton(provider),
+      buildBottomButton(provider, context),
     ]);
   }
 
@@ -137,7 +139,8 @@ class ProductDetailPage extends StatelessWidget {
             ])));
   }
 
-  Widget buildBottomButton(ProductDetailPageProvider provider) {
+  Widget buildBottomButton(
+      ProductDetailPageProvider provider, BuildContext context) {
     return Positioned(
         left: 0,
         bottom: 0,
@@ -158,7 +161,9 @@ class ProductDetailPage extends StatelessWidget {
                           )))),
               Expanded(
                   child: InkWell(
-                      onTap: () => print('加入购物车'),
+                      onTap: () =>
+                          Provider.of<CartPageProvider>(context, listen: false)
+                              .addToCart(provider.productDetailModel.partData),
                       child: Container(
                           height: ScreenUtil().setHeight(80),
                           color: Colors.red,
@@ -368,7 +373,9 @@ class CountDialog extends StatelessWidget {
                   right: 0,
                   bottom: 0,
                   child: InkWell(
-                      onTap: () => Routes.router.pop(context),
+                      onTap: () =>
+                          Provider.of<CartPageProvider>(context, listen: false)
+                              .addToCart(provider.productDetailModel.partData),
                       child: Container(
                           width: ScreenUtil().setWidth(750),
                           height: ScreenUtil().setHeight(50),
