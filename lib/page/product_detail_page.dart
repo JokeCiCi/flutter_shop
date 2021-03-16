@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_shop/provider/bottom_navi_provider.dart';
 import 'package:flutter_shop/provider/cart_page_provider.dart';
 import 'package:flutter_shop/provider/cate_page_provider.dart';
 import 'package:flutter_shop/provider/product_detail_page_provider.dart';
@@ -152,7 +153,11 @@ class ProductDetailPage extends StatelessWidget {
             child: Row(children: [
               Expanded(
                   child: InkWell(
-                      onTap: () => print('购物车'),
+                      onTap: () {
+                        Navigator.popUntil(context, ModalRoute.withName("/"));
+                        Provider.of<BottomNaviProvider>(context, listen: false)
+                            .changeBottomNaviIndex(2);
+                      },
                       child: Container(
                           height: ScreenUtil().setHeight(80),
                           child: Column(
@@ -183,7 +188,7 @@ class ProductDetailPage extends StatelessWidget {
                   child: InkWell(
                       onTap: () =>
                           Provider.of<CartPageProvider>(context, listen: false)
-                              .addToCart(provider.productDetailModel.partData),
+                              .cartAdd(provider.productDetailModel.partData),
                       child: Container(
                           height: ScreenUtil().setHeight(80),
                           color: Colors.red,
@@ -395,7 +400,7 @@ class CountDialog extends StatelessWidget {
                   child: InkWell(
                       onTap: () {
                         Provider.of<CartPageProvider>(context, listen: false)
-                            .addToCart(provider.productDetailModel.partData);
+                            .cartAdd(provider.productDetailModel.partData);
                         Routes.router.pop(context);
                       },
                       child: Container(

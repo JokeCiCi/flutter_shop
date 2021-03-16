@@ -63,8 +63,15 @@ class PartData {
   String title;
   String price;
   int count;
+  bool isSelected;
 
-  PartData({this.id, this.loopImgUrl, this.title, this.price, this.count});
+  PartData(
+      {this.id,
+      this.loopImgUrl,
+      this.title,
+      this.price,
+      this.count,
+      this.isSelected});
 
   PartData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -72,6 +79,7 @@ class PartData {
     title = json['title'];
     price = json['price'];
     count = json['count'];
+    isSelected = json['isSelected'] == null ? false : json['isSelected'];
   }
 
   Map<String, dynamic> toJson() {
@@ -81,6 +89,7 @@ class PartData {
     data['title'] = this.title;
     data['price'] = this.price;
     data['count'] = this.count;
+    data['isSelected'] = this.isSelected;
     return data;
   }
 }

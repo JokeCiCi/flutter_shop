@@ -1,50 +1,109 @@
 import 'dart:convert';
 
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_shop/model/product_detail_page_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartPageProvider with ChangeNotifier {
   List<PartData> productDataList = [];
-  Future<void> addToCart(PartData product) async {
-    // 从持久性存储读出字符串数据
+  bool isSelectAll = false;
+
+  Future<void> cartLoad() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var cacheList = prefs.getStringList('cartInfo');
-    productDataList.clear();
-    if (null == cacheList) {
-      // 没有缓存
-      List<String> tempList = [json.encode(product.toJson())];
-      prefs.setStringList('cartInfo', tempList); // 写入缓存
-      // 更新本地数据
-      productDataList.add(product);
-      // 通知听众
-      notifyListeners();
-    } else {
-      // 有缓存
-      List<String> tempList = [];
-      var isCached = false; // 判断传参是否在缓存中
-      cacheList.forEach((ele) {
-        var tempPart = PartData.fromJson(json.decode(ele));
-        if (tempPart.id == product.id) {
-          tempPart.count = product.count;
-          isCached = true;
-        }
-        tempList.add(json.encode(tempPart));
-        productDataList.add(tempPart);
-      });
-      if (isCached == false) {
-        // 缓存不存在传参数据
-        tempList.add(json.encode(product));
-        productDataList.add(product);
-      }
-      prefs.setStringList('cartInfo', tempList); // 写入缓存
-      notifyListeners();
+    if (cacheList != null) {
+      productDataList =
+          cacheList.map((e) => PartData.fromJson(json.decode(e))).toList();
+
+      isSelectAll = getSelectedCount() == productDataList.length ? true : false;
     }
+    notifyListeners();
+  }
+
+  Future<void> cartSync() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var cacheList =
+        productDataList.map((e) => json.encode(e.toJson())).toList();
+    prefs.setStringList('cartInfo', cacheList);
+    notifyListeners();
+  }
+
+  Future<void> cartAdd(PartData product) async {
+    var exists = false;
+    for (var i = 0; i < productDataList.length; i++) {
+      if (productDataList[i].id == product.id) {
+        productDataList[i].count = product.count;
+        exists = true;
+      }
+    }
+    if (!exists) {
+      productDataList.add(product);
+    }
+
+    await cartSync();
+    notifyListeners();
+  }
+
+  Future<void> cartDel(String id) async {
+    for (var i = 0; i < productDataList.length; i++) {
+      if (productDataList[i].id == id) {
+        productDataList.remove(productDataList[i]);
+        break;
+      }
+    }
+    await cartSync();
+    notifyListeners();
   }
 
   int getAllProductCount() {
     int count = 0;
     productDataList.forEach((element) => count += element.count);
     return count;
+  }
+
+  Future<void> changeSelect(String id) async {
+    for (var i = 0; i < productDataList.length; i++) {
+      if (productDataList[i].id == id) {
+        productDataList[i].isSelected = !productDataList[i].isSelected;
+        break;
+      }
+    }
+
+    isSelectAll = getSelectedCount() == productDataList.length ? true : false;
+    await cartSync();
+    notifyListeners();
+  }
+
+  Future<void> changeSelectAll() async {
+    isSelectAll = !isSelectAll;
+    for (var i = 0; i < productDataList.length; i++) {
+      productDataList[i].isSelected = isSelectAll;
+    }
+    await cartSync();
+    notifyListeners();
+  }
+
+  String getAllAmount() {
+    String allAmnount = '0.00';
+    for (var i = 0; i < productDataList.length; i++) {
+      num amount = NumUtil.getNumByValueStr(productDataList[i].price,
+              fractionDigits: 2) *
+          productDataList[i].count;
+      allAmnount = NumUtil.add(
+              NumUtil.getNumByValueStr(allAmnount, fractionDigits: 2), amount)
+          .toString();
+    }
+    return allAmnount;
+  }
+
+  int getSelectedCount() {
+    int selectedCount = 0;
+    for (var i = 0; i < productDataList.length; i++) {
+      if (productDataList[i].isSelected) {
+        selectedCount++;
+      }
+    }
+    return selectedCount;
   }
 }
