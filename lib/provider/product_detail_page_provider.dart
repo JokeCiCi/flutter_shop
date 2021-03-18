@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_shop/factory/factory.dart';
 import 'package:flutter_shop/model/product_detail_page_model.dart';
 import 'package:flutter_shop/net/http_client.dart';
 import 'package:flutter_shop/config/api.dart';
@@ -9,23 +10,24 @@ class ProductDetailPageProvider with ChangeNotifier {
   bool isError = false;
   String errMsg = '';
 
-  void loadProductDetailModel(String id) {
+  Future<void> loadProductDetailModel(String id) async {
     isLoading = true;
-    HttpClient().requestData(Api.PROD_DETAIL).then((resp) {
-      print('dio resp: ${resp.data}');
+    final client = await AppFactory.getInstance().getHttpClient();
+    client.get(Api.PROD_DETAIL).then((body) {
       isLoading = false;
-      if (resp.code == 200 && resp.data is List) {
-        var dataList = (resp.data as List).cast();
+      if (body.code == 200) {
+        var dataList = (body.data as List).cast();
         dataList.forEach((ele) {
           var tempModel = ProductDetailModel.fromJson(ele);
           if (tempModel.partData.id == id) {
             productDetailModel = tempModel;
           }
         });
+      } else {
+        Future.error('code:${body.code} msg:${body.msg}');
       }
       notifyListeners();
     }).catchError((error) {
-      print('dio err: $error');
       isLoading = false;
       isError = true;
       errMsg = error;

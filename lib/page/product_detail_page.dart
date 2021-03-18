@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_shop/provider/bottom_navi_provider.dart';
 import 'package:flutter_shop/provider/cart_page_provider.dart';
-import 'package:flutter_shop/provider/cate_page_provider.dart';
 import 'package:flutter_shop/provider/product_detail_page_provider.dart';
-import 'package:flutter_shop/routes/routes.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:provider/provider.dart';
 
@@ -154,7 +152,8 @@ class ProductDetailPage extends StatelessWidget {
               Expanded(
                   child: InkWell(
                       onTap: () {
-                        Navigator.popUntil(context, ModalRoute.withName("/"));
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/', (route) => route == null);
                         Provider.of<BottomNaviProvider>(context, listen: false)
                             .changeBottomNaviIndex(2);
                       },
@@ -235,7 +234,7 @@ class BaiTiaoDialog extends StatelessWidget {
                     child: Center(
                         child: IconButton(
                             icon: Icon(Icons.close),
-                            onPressed: () => Routes.router.pop(context))))
+                            onPressed: () => Navigator.of(context).pop())))
               ]),
               Container(
                   width: ScreenUtil().setWidth(750),
@@ -278,7 +277,7 @@ class BaiTiaoDialog extends StatelessWidget {
                   right: 0,
                   bottom: 0,
                   child: InkWell(
-                      onTap: () => Routes.router.pop(context),
+                      onTap: () => Navigator.of(context).pop(),
                       child: Container(
                           width: ScreenUtil().setWidth(750),
                           height: ScreenUtil().setHeight(50),
@@ -340,7 +339,7 @@ class CountDialog extends StatelessWidget {
                           margin: EdgeInsets.only(right: 10, top: 20),
                           child: IconButton(
                               icon: Icon(Icons.close),
-                              onPressed: () => Routes.router.pop(context)))
+                              onPressed: () => Navigator.of(context).pop()))
                     ],
                   )),
               Container(
@@ -401,7 +400,7 @@ class CountDialog extends StatelessWidget {
                       onTap: () {
                         Provider.of<CartPageProvider>(context, listen: false)
                             .cartAdd(provider.productDetailModel.partData);
-                        Routes.router.pop(context);
+                        Navigator.of(context).pop();
                       },
                       child: Container(
                           width: ScreenUtil().setWidth(750),

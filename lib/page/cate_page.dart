@@ -99,8 +99,8 @@ class CatePage extends StatelessWidget {
               .map((e) => Container(
                   width: ScreenUtil().setWidth(100),
                   child: InkWell(
-                      onTap: () => Routes.router
-                          .navigateTo(context, '/productions/${e.text}'),
+                      onTap: () => Navigator.of(context)
+                          .pushNamed('/productList', arguments: e.text),
                       child: Column(children: [
                         Image.asset('assets${e.img}',
                             width: ScreenUtil().setWidth(80)),

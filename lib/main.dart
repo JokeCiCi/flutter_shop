@@ -1,10 +1,9 @@
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_shop/factory/factory.dart';
 import 'package:flutter_shop/provider/cart_page_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_shop/page/index_page.dart';
 import 'package:flutter_shop/provider/bottom_navi_provider.dart';
-import 'package:flutter_shop/routes/routes.dart';
 
 void main() => runApp(MultiProvider(providers: [
       ChangeNotifierProvider<BottomNaviProvider>(
@@ -18,14 +17,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var router = FluroRouter();
-    Routes.router = router;
-    Routes.defineRoutes(router);
     return MaterialApp(
         title: '京东商城',
         theme: ThemeData(primaryColor: Colors.blue),
         debugShowCheckedModeBanner: false,
-        onGenerateRoute: Routes.router.generator,
-        home: IndexPage());
+        onGenerateRoute: AppFactory.getInstance().getRoutes().onGenerateRoute,
+        initialRoute: '/');
   }
 }

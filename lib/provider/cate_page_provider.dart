@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter_shop/net/http_client.dart';
+import 'package:flutter_shop/factory/factory.dart';
 import 'package:flutter_shop/config/api.dart';
 import 'package:flutter_shop/model/cate_page_model.dart';
 
@@ -13,19 +11,20 @@ class CatePageProvider with ChangeNotifier {
   bool isError = false;
   String errMsg = '';
 
-  void loadCateNaviListData() {
+  Future<void> loadCateNaviListData() async {
+    final client = await AppFactory.getInstance().getHttpClient();
     isLoading = true;
-    HttpClient().requestData(Api.CATE_NAVI).then((resp) {
-      print('dio resp: ${resp.data}');
+    client.get(Api.CATE_NAVI).then((body) {
       isLoading = false;
-      if (resp.code == 200) {
+      if (body.code == 200) {
         cateNaviList =
-            (resp.data as List).cast().map((e) => e.toString()).toList();
+            (body.data as List).cast().map((e) => e.toString()).toList();
         loadCateContentListData(cateNaviIndex);
+      } else {
+        Future.error('code:${body.code} msg:${body.msg}');
       }
       notifyListeners();
     }).catchError((error) {
-      print('dio err: $error');
       isLoading = false;
       isError = true;
       errMsg = error;
@@ -33,24 +32,23 @@ class CatePageProvider with ChangeNotifier {
     });
   }
 
-  void loadCateContentListData(int index) {
+  Future<void> loadCateContentListData(int index) async {
+    final client = await AppFactory.getInstance().getHttpClient();
     cateNaviIndex = index;
     var title = cateNaviList[index];
     var data = {'title': title};
     isLoading = true;
-    HttpClient()
-        .requestData(Api.CATE_CONTENT, data: data, method: 'post')
-        .then((resp) {
-      print('dio resp: ${resp.data}');
+    client.post(Api.CATE_CONTENT, data: data).then((body) {
       isLoading = false;
-      if (resp.code == 200) {
-        var respDataList = (resp.data as List).cast();
+      if (body.code == 200) {
+        var respDataList = (body.data as List).cast();
         cateContentModelList =
             respDataList.map((e) => CateContentModel.fromJson(e)).toList();
+      } else {
+        Future.error('code:${body.code} msg:${body.msg}');
       }
       notifyListeners();
     }).catchError((error) {
-      print('dio err: $error');
       isLoading = false;
       isError = true;
       errMsg = error;
